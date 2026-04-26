@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Profile - Mood Analyzer{% endblock %}
+
+{% block content %}
+<div class="profile-page py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-5">
+                        <div class="row align-items-center gap-4">
+                            <div class="col-md-4 text-center">
+                                <div class="profile-avatar mb-4">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <h5 class="mb-1">{{ user.username }}</h5>
+                                <p class="text-muted mb-0">Member since {{ user.created_at.strftime('%b %d, %Y') }}</p>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="info-card p-4 h-100">
+                                            <strong>Email</strong>
+                                            <p class="mb-0 text-muted">{{ user.email }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-card p-4 h-100">
+                                            <strong>Username</strong>
+                                            <p class="mb-0 text-muted">{{ user.username }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-card p-4 h-100">
+                                            <strong>Mood Entries</strong>
+                                            <p class="mb-0 text-muted">{{ mood_count }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="info-card p-4 h-100">
+                                            <strong>Behavior Logs</strong>
+                                            <p class="mb-0 text-muted">{{ behavior_count }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-5">
+                            <h5>Profile Notes</h5>
+                            <p class="text-muted">Use your profile page to review account details and track how many entries you have logged. Keep your information secure and continue updating daily to get better insights.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-avatar {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        background: #eef2ff;
+        color: #4338ca;
+        font-size: 3rem;
+        margin: 0 auto;
+    }
+    .info-card {
+        background: #f8fafc;
+        border-radius: 18px;
+    }
+</style>
+{% endblock %}

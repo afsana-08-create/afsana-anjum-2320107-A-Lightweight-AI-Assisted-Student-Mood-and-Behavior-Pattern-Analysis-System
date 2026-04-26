@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome - Mood Insight{% endblock %}
+
+{% block not_logged_in_content %}
+<div class="landing-page">
+    <div class="hero-section py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-copy">
+                        <span class="badge bg-primary mb-3">AI-Assisted Student Mood & Behavior</span>
+                        <h1 class="display-5 fw-bold">Understand your mood, improve your habits, and stay balanced.</h1>
+                        <p class="lead text-muted mb-4">Track daily mood, sleep, study time, academic pressure, and social habits with simple inputs. Get personalized recommendations and trend insights to support your wellbeing.</p>
+                        <div class="hero-actions d-flex flex-wrap gap-3">
+                            <a href="{{ url_for('register') }}" class="btn btn-lg btn-primary">Get Started</a>
+                            <a href="{{ url_for('login') }}" class="btn btn-lg btn-outline-primary">Login</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                    <img src="https://www.wellable.co/blog/wp-content/uploads/2024/01/Science-Of-Habit-Formation-Habit-Loop-edited.png">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-section py-5 bg-light">
+        <div class="container">
+            <div class="section-heading text-center mb-5">
+                <h2>What you can do</h2>
+                <p class="text-muted">A clean dashboard for insights, daily tracking, and AI-powered recommendations.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card shadow-sm p-4 h-100">
+                        <div class="feature-icon mb-3"><i class="fas fa-edit"></i></div>
+                        <h5>Daily Input</h5>
+                        <p class="text-muted">Log your mood, sleep, study time, and social activities with guided input forms.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card shadow-sm p-4 h-100">
+                        <div class="feature-icon mb-3"><i class="fas fa-chart-line"></i></div>
+                        <h5>Visual Analytics</h5>
+                        <p class="text-muted">View mood trends, sleep hours, study routines and social balance in charts.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card shadow-sm p-4 h-100">
+                        <div class="feature-icon mb-3"><i class="fas fa-brain"></i></div>
+                        <h5>Smart Insights</h5>
+                        <p class="text-muted">Receive risk levels, behavioral patterns and personalized suggestions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        padding: 80px 0;
+    }
+    .hero-copy h1 {
+        max-width: 600px;
+    }
+    .hero-actions .btn {
+        min-width: 160px;
+    }
+    .landing-image {
+        max-width: 100%;
+        margin-top: 30px;
+    }
+    .features-section {
+        padding: 60px 0;
+    }
+    .feature-card {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid rgba(102, 126, 234, 0.12);
+    }
+    .feature-icon {
+        width: 58px;
+        height: 58px;
+        display: grid;
+        place-items: center;
+        background: rgba(102, 126, 234, 0.1);
+        border-radius: 16px;
+        color: #4f46e5;
+        font-size: 1.5rem;
+    }
+    .section-heading h2 {
+        font-weight: 700;
+    }
+</style>
+{% endblock %}

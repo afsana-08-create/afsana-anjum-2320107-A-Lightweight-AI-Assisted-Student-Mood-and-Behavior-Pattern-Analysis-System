@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - Mood Analyzer{% endblock %}
+
+{% block content %}
+<div class="analytics-container">
+    <h2 class="mb-4"><i class="fas fa-chart-line text-primary"></i> AI-Powered Analytics</h2>
+    
+    {% if not has_data %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Not enough data!</strong> Please log at least one mood entry and behavior log to see analytics.
+        <a href="/mood_entry" class="btn btn-sm btn-primary ms-2">Log Mood</a>
+        <a href="/behavior_log" class="btn btn-sm btn-success ms-2">Log Behavior</a>
+    </div>
+    {% else %}
+    
+    <!-- AI Prediction Section -->
+    {% if prediction %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card prediction-card">
+                <div class="card-header bg-gradient">
+                    <h5 class="mb-0"><i class="fas fa-robot me-2"></i> AI Mood Prediction</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center">
+                            <div class="prediction-emoji">
+                                {% if prediction.predicted_mood == 1 %}😢
+                                {% elif prediction.predicted_mood == 2 %}😕
+                                {% elif prediction.predicted_mood == 3 %}😐
+                                {% elif prediction.predicted_mood == 4 %}🙂
+                                {% else %}😊{% endif %}
+                            </div>
+                            <h4>Predicted Mood: {{ prediction.predicted_mood }}/5</h4>
+                            {% if prediction.confidence %}
+                            <p class="text-muted">Confidence: {{ prediction.confidence }}%</p>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-8">
+                            <div class="recommendation">
+                                <h6><i class="fas fa-lightbulb text-warning me-2"></i>Recommendation:</h6>
+                                <p>{{ prediction.recommendation }}</p>
+                            </div>
+                            {% if prediction.factors %}
+                            <div class="factors mt-3">
+                                {% for factor in prediction.factors %}
+                                <span class="badge bg-{{ 'success' if '✅' in factor else 'warning' if '⚠️' in factor else 'info' }} me-2 mb-2">{{ factor }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Pattern Analysis -->
+    {% if patterns %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-brain me-2"></i> Behavior Pattern Analysis</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Averages (Last {{ patterns.days_tracked }} days):</h6>
+                            <ul class="pattern-stats">
+                                <li><i class="fas fa-bed text-primary"></i> Sleep: {{ patterns.avg_sleep }}h</li>
+                                <li><i class="fas fa-book text-success"></i> Study: {{ patterns.avg_study }}h</li>
+                                <li><i class="fas fa-running text-warning"></i> Exercise: {{ patterns.avg_exercise }}min</li>
+                                <li><i class="fas fa-users text-info"></i> Social: {{ patterns.avg_social }}h</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Mood Trend:</h6>
+                            <p class="trend-text">{{ patterns.mood_trend }}</p>
+                            <p class="text-muted small">Total entries: {{ patterns.total_entries }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Insights -->
+                    {% if patterns.insights %}
+                    <hr>
+                    <h6><i class="fas fa-lightbulb text-warning me-2"></i>Personalized Insights:</h6>
+                    <div class="insights-grid">
+                        {% for insight in patterns.insights %}
+                        <div class="insight-card insight-{{ insight.type }}">
+                            <span class="insight-icon">{{ insight.icon }}</span>
+                            <div class="insight-content">
+                                <strong>{{ insight.title }}</strong>
+                                <p class="mb-0">{{ insight.message }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Correlations -->
+                    {% if patterns.correlations %}
+                    <hr>
+                    <h6><i class="fas fa-link text-primary me-2"></i>Behavior-Mood Correlations:</h6>
+                    <div class="correlations">
+                        {% for corr in patterns.correlations %}
+                        <span class="badge bg-secondary me-2 mb-2">{{ corr }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Charts -->
+    <div class="row">
+        <!-- Mood Chart -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0"><i class="fas fa-smile me-2"></i>Mood Over Time</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="moodChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sleep Chart -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="fas fa-bed me-2"></i>Sleep Hours</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="sleepChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Study Chart -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0"><i class="fas fa-book me-2"></i>Study Hours</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="studyChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Exercise Chart -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h6 class="mb-0"><i class="fas fa-running me-2"></i>Exercise Minutes</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="exerciseChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Mood Chart
+    const moodCtx = document.getElementById('moodChart').getContext('2d');
+    new Chart(moodCtx, {
+        type: 'line',
+        data: {
+            labels: {{ mood_labels | tojson }},
+            datasets: [{
+                label: 'Mood Level',
+                data: {{ mood_values | tojson }},
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            scales: {
+                y: { min: 0, max: 5 }
+            }
+        }
+    });
+    
+    // Sleep Chart
+    const sleepCtx = document.getElementById('sleepChart').getContext('2d');
+    new Chart(sleepCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ behavior_labels | tojson }},
+            datasets: [{
+                label: 'Sleep Hours',
+                data: {{ sleep_values | tojson }},
+                backgroundColor: 'rgba(23, 162, 184, 0.7)'
+            }]
+        }
+    });
+    
+    // Study Chart
+    const studyCtx = document.getElementById('studyChart').getContext('2d');
+    new Chart(studyCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ behavior_labels | tojson }},
+            datasets: [{
+                label: 'Study Hours',
+                data: {{ study_values | tojson }},
+                backgroundColor: 'rgba(40, 167, 69, 0.7)'
+            }]
+        }
+    });
+    
+    // Exercise Chart
+    const exerciseCtx = document.getElementById('exerciseChart').getContext('2d');
+    new Chart(exerciseCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ behavior_labels | tojson }},
+            datasets: [{
+                label: 'Exercise Minutes',
+                data: {{ exercise_values | tojson }},
+                backgroundColor: 'rgba(255, 193, 7, 0.7)'
+            }]
+        }
+    });
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .prediction-card .card-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .prediction-emoji {
+        font-size: 60px;
+    }
+    
+    .recommendation {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        border-left: 4px solid #667eea;
+    }
+    
+    .pattern-stats {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .pattern-stats li {
+        padding: 8px 0;
+        font-size: 16px;
+    }
+    
+    .pattern-stats i {
+        width: 25px;
+    }
+    
+    .trend-text {
+        font-size: 18px;
+        font-weight: 600;
+    }
+    
+    .insights-grid {
+        display: grid;
+        gap: 15px;
+    }
+    
+    .insight-card {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px;
+        border-radius: 10px;
+        background: #f8f9fa;
+    }
+    
+    .insight-warning {
+        border-left: 4px solid #ffc107;
+    }
+    
+    .insight-success {
+        border-left: 4px solid #28a745;
+    }
+    
+    .insight-tip {
+        border-left: 4px solid #17a2b8;
+    }
+    
+    .insight-inspiration {
+        border-left: 4px solid #6f42c1;
+    }
+    
+    .insight-icon {
+        font-size: 24px;
+        margin-right: 15px;
+    }
+    
+    .insight-content strong {
+        display: block;
+        margin-bottom: 5px;
+    }
+</style>
+{% endblock %}

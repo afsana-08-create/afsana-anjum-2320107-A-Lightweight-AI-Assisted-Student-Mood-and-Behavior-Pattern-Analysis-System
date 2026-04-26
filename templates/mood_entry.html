@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Log Mood - Mood Analyzer{% endblock %}
+
+{% block content %}
+<div class="mood-entry-container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-smile me-2"></i> How are you feeling today?</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <!-- Mood Selection -->
+                        <div class="mood-selection mb-4">
+                            <label class="form-label fw-bold">Select your mood:</label>
+                            <div class="mood-options">
+                                <label class="mood-option">
+                                    <input type="radio" name="mood_level" value="1" required>
+                                    <div class="mood-box">
+                                        <span class="mood-emoji">😢</span>
+                                        <span class="mood-label">Very Sad</span>
+                                    </div>
+                                </label>
+                                <label class="mood-option">
+                                    <input type="radio" name="mood_level" value="2">
+                                    <div class="mood-box">
+                                        <span class="mood-emoji">😕</span>
+                                        <span class="mood-label">Bad</span>
+                                    </div>
+                                </label>
+                                <label class="mood-option">
+                                    <input type="radio" name="mood_level" value="3">
+                                    <div class="mood-box">
+                                        <span class="mood-emoji">😐</span>
+                                        <span class="mood-label">Neutral</span>
+                                    </div>
+                                </label>
+                                <label class="mood-option">
+                                    <input type="radio" name="mood_level" value="4">
+                                    <div class="mood-box">
+                                        <span class="mood-emoji">🙂</span>
+                                        <span class="mood-label">Good</span>
+                                    </div>
+                                </label>
+                                <label class="mood-option">
+                                    <input type="radio" name="mood_level" value="5">
+                                    <div class="mood-box">
+                                        <span class="mood-emoji">😊</span>
+                                        <span class="mood-label">Happy</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Mood Note -->
+                        <div class="mb-4">
+                            <label for="mood_note" class="form-label fw-bold">
+                                <i class="fas fa-comment me-2"></i>Notes (optional)
+                            </label>
+                            <textarea class="form-control" id="mood_note" name="mood_note" 
+                                      rows="4" placeholder="What's on your mind? How was your day?"></textarea>
+                        </div>
+                        
+                        <!-- Submit -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save me-2"></i> Save Mood Entry
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Tips -->
+            <div class="card mt-4 shadow-sm">
+                <div class="card-body">
+                    <h5><i class="fas fa-lightbulb text-warning me-2"></i>Tips for better mood tracking:</h5>
+                    <ul class="mb-0">
+                        <li>Log your mood at the same time each day</li>
+                        <li>Be honest - this data is for your personal insight</li>
+                        <li>Add notes about significant events</li>
+                        <li>Review your patterns in the Analytics section</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .mood-selection {
+        text-align: center;
+    }
+    
+    .mood-options {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .mood-option {
+        cursor: pointer;
+    }
+    
+    .mood-option input {
+        display: none;
+    }
+    
+    .mood-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        border: 3px solid #e0e0e0;
+        border-radius: 15px;
+        transition: all 0.3s;
+        min-width: 100px;
+    }
+    
+    .mood-option input:checked + .mood-box {
+        border-color: #667eea;
+        background: #f0f4ff;
+        transform: scale(1.05);
+    }
+    
+    .mood-box:hover {
+        border-color: #667eea;
+        transform: translateY(-3px);
+    }
+    
+    .mood-emoji {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+    
+    .mood-label {
+        font-weight: 600;
+        color: #555;
+    }
+</style>
+{% endblock %}

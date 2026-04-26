@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Log Behavior - Mood Analyzer{% endblock %}
+
+{% block content %}
+<div class="behavior-log-container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fas fa-running me-2"></i> Log Your Daily Activities</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <!-- Sleep Hours -->
+                        <div class="mb-4">
+                            <label for="sleep_hours" class="form-label fw-bold">
+                                <i class="fas fa-bed me-2"></i>Sleep Hours
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control form-control-lg" 
+                                       id="sleep_hours" name="sleep_hours" 
+                                       min="0" max="24" step="0.5" required placeholder="7.5">
+                                <span class="input-group-text">hours</span>
+                            </div>
+                            <div class="form-text">How many hours did you sleep last night?</div>
+                            <div class="range-labels">
+                                <span>0h</span>
+                                <span>4h</span>
+                                <span>8h</span>
+                                <span>12h</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Study Hours -->
+                        <div class="mb-4">
+                            <label for="study_hours" class="form-label fw-bold">
+                                <i class="fas fa-book me-2"></i>Study Hours
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control form-control-lg" 
+                                       id="study_hours" name="study_hours" 
+                                       min="0" max="24" step="0.5" required placeholder="5">
+                                <span class="input-group-text">hours</span>
+                            </div>
+                            <div class="form-text">Total hours spent studying/working on assignments</div>
+                        </div>
+                        
+                        <!-- Exercise Minutes -->
+                        <div class="mb-4">
+                            <label for="exercise_minutes" class="form-label fw-bold">
+                                <i class="fas fa-running me-2"></i>Exercise Minutes
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control form-control-lg" 
+                                       id="exercise_minutes" name="exercise_minutes" 
+                                       min="0" max="480" step="5" required placeholder="30">
+                                <span class="input-group-text">minutes</span>
+                            </div>
+                            <div class="form-text">Physical activity: walking, gym, sports, etc.</div>
+                        </div>
+                        
+                        <!-- Social Hours -->
+                        <div class="mb-4">
+                            <label for="social_hours" class="form-label fw-bold">
+                                <i class="fas fa-users me-2"></i>Social Hours
+                            </label>
+                            <div class="input-group">
+                                <input type="number" class="form-control form-control-lg" 
+                                       id="social_hours" name="social_hours" 
+                                       min="0" max="24" step="0.5" required placeholder="2">
+                                <span class="input-group-text">hours</span>
+                            </div>
+                            <div class="form-text">Time spent with friends, family, or social activities</div>
+                        </div>
+                        
+                        <!-- Submit -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save me-2"></i> Save Behavior Log
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Guidelines -->
+            <div class="card mt-4 shadow-sm">
+                <div class="card-body">
+                    <h5><i class="fas fa-info-circle text-info me-2"></i>Activity Guidelines:</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="mb-0">
+                                <li><strong>Sleep:</strong> 7-9 hours recommended</li>
+                                <li><strong>Study:</strong> Take breaks every 25-30 min</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="mb-0">
+                                <li><strong>Exercise:</strong> 30 min daily recommended</li>
+                                <li><strong>Social:</strong> 1-2 hours for wellbeing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-control-lg {
+        font-size: 1.1rem;
+    }
+    
+    .input-group-text {
+        font-size: 1rem;
+        min-width: 80px;
+        justify-content: center;
+    }
+    
+    .range-labels {
+        display: flex;
+        justify-content: space-between;
+        padding: 0 10px;
+        font-size: 12px;
+        color: #888;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}

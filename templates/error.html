@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Error {{ error_code }} - Mood Analyzer{% endblock %}
+
+{% block not_logged_in_content %}
+<div class="error-container text-center py-5">
+    <div class="error-content">
+        <div class="error-code display-1 fw-bold text-danger mb-3">{{ error_code }}</div>
+        <h1 class="mb-3">{{ error_message }}</h1>
+        <p class="text-muted mb-4">Sorry, something went wrong. Please try again later.</p>
+        <div class="error-actions">
+            <a href="/" class="btn btn-primary btn-lg me-2">
+                <i class="fas fa-home me-2"></i>Go Home
+            </a>
+            <a href="javascript:history.back()" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-arrow-left me-2"></i>Go Back
+            </a>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<style>
+    .error-container {
+        min-height: 60vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .error-content {
+        max-width: 500px;
+        padding: 40px;
+    }
+    
+    .error-code {
+        opacity: 0.2;
+    }
+</style>
+{% endblock %}
+{% endblock %}

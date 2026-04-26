@@ -1,0 +1,266 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Mood Analyzer{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    <div class="dashboard-header mb-4">
+        <div>
+            <span class="badge bg-primary-soft text-primary">Dashboard</span>
+            <h1 class="mt-3">Hello, {{ username }}!</h1>
+            <p class="text-muted">Track your daily mood and behavior patterns, and get AI-backed insights for your wellbeing.</p>
+        </div>
+        <div class="dashboard-actions d-flex flex-wrap gap-2">
+            <a href="/mood_entry" class="btn btn-primary btn-lg"><i class="fas fa-smile me-2"></i>Log Mood</a>
+            <a href="/behavior_log" class="btn btn-success btn-lg"><i class="fas fa-running me-2"></i>Log Behavior</a>
+            <a href="/analytics" class="btn btn-info btn-lg"><i class="fas fa-chart-line me-2"></i>Analytics</a>
+        </div>
+    </div>
+
+    <div class="row gx-4 gy-4 mb-4">
+        <div class="col-lg-3 col-sm-6">
+            <div class="stat-card stat-mood">
+                <div class="stat-icon"><i class="fas fa-smile"></i></div>
+                <div>
+                    <span class="stat-value">{{ mood_count }}</span>
+                    <p class="stat-label">Mood Entries</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="stat-card stat-behavior">
+                <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                <div>
+                    <span class="stat-value">{{ behavior_count }}</span>
+                    <p class="stat-label">Behavior Logs</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="stat-card stat-sleep">
+                <div class="stat-icon"><i class="fas fa-bed"></i></div>
+                <div>
+                    <span class="stat-value">{{ avg_sleep }}h</span>
+                    <p class="stat-label">Avg Sleep</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="stat-card stat-risk">
+                <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <div>
+                    <span class="stat-value">{{ risk_level }}</span>
+                    <p class="stat-label">Risk Level</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row gx-4 gy-4">
+        <div class="col-xl-7">
+            <div class="card shadow-sm dashboard-card">
+                <div class="card-header bg-white border-bottom-0">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <h5 class="mb-0"><i class="fas fa-clock me-2 text-primary"></i>Recent Activity</h5>
+                        <small class="text-muted">Latest logged entries</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row gx-4 gy-4">
+                        <div class="col-md-6">
+                            <div class="content-card p-4">
+                                <h6>Recent Moods</h6>
+                                {% if recent_moods %}
+                                <div class="mood-list">
+                                    {% for mood in recent_moods %}
+                                    <div class="mood-item">
+                                        <span class="mood-emoji">
+                                            {% if mood.mood_level == 1 %}😢
+                                            {% elif mood.mood_level == 2 %}😕
+                                            {% elif mood.mood_level == 3 %}😐
+                                            {% elif mood.mood_level == 4 %}🙂
+                                            {% else %}😊{% endif %}
+                                        </span>
+                                        <div>
+                                            <strong>Level {{ mood.mood_level }}/5</strong>
+                                            <div class="text-muted small">{{ mood.entry_date }}</div>
+                                            {% if mood.mood_note %}
+                                            <p class="mb-0 text-muted">{{ mood.mood_note }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <div class="empty-state py-4 text-center">
+                                    <i class="fas fa-inbox fa-2x text-muted mb-3"></i>
+                                    <p class="text-muted">No mood entries yet.</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="content-card p-4">
+                                <h6>Recent Behaviors</h6>
+                                {% if recent_behaviors %}
+                                <div class="behavior-list">
+                                    {% for behavior in recent_behaviors %}
+                                    <div class="behavior-item">
+                                        <div class="behavior-stats mb-2">
+                                            <span><i class="fas fa-bed me-1"></i>{{ behavior.sleep_hours }}h</span>
+                                            <span><i class="fas fa-book me-1"></i>{{ behavior.study_hours }}h</span>
+                                            <span><i class="fas fa-running me-1"></i>{{ behavior.exercise_minutes }}m</span>
+                                            <span><i class="fas fa-users me-1"></i>{{ behavior.social_hours }}h</span>
+                                        </div>
+                                        <div class="text-muted small">{{ behavior.log_date }}</div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <div class="empty-state py-4 text-center">
+                                    <i class="fas fa-inbox fa-2x text-muted mb-3"></i>
+                                    <p class="text-muted">No behavior logs yet.</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-5">
+            <div class="card shadow-sm dashboard-card h-100">
+                <div class="card-header bg-white border-bottom-0">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb me-2 text-warning"></i>Insights</h5>
+                </div>
+                <div class="card-body">
+                    <div class="insight-box p-4">
+                        <h6 class="mb-3">Your current snapshot</h6>
+                        <p class="text-muted">The risk summary is based on your most recent behavior log. Visit Analytics for deeper trend analysis and personalized suggestions.</p>
+                        <div class="row text-center mt-4 gx-2">
+                            <div class="col-6">
+                                <div class="mini-stat">
+                                    <span>Sleep</span>
+                                    <strong>{{ avg_sleep }}h</strong>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="mini-stat">
+                                    <span>Study</span>
+                                    <strong>{{ avg_study }}h</strong>
+                                </div>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <div class="mini-stat">
+                                    <span>Social</span>
+                                    <strong>{{ avg_social }}h</strong>
+                                </div>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <div class="mini-stat">
+                                    <span>Risk</span>
+                                    <strong>{{ risk_level }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .dashboard-actions .btn {
+        min-width: 170px;
+    }
+    .stat-card {
+        background: white;
+        border-radius: 18px;
+        padding: 25px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        box-shadow: 0 18px 60px rgba(54, 86, 236, 0.08);
+        border: 1px solid rgba(112, 118, 200, 0.14);
+    }
+    .stat-card .stat-icon {
+        width: 55px;
+        height: 55px;
+        display: grid;
+        place-items: center;
+        border-radius: 16px;
+        font-size: 1.1rem;
+    }
+    .stat-label {
+        margin: 0;
+        color: #6b7280;
+    }
+    .stat-value {
+        display: block;
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+    .dashboard-card {
+        border-radius: 24px;
+    }
+    .content-card {
+        background: #fbfcff;
+        border-radius: 20px;
+        border: 1px solid #e7ebff;
+    }
+    .mood-item,
+    .behavior-item {
+        padding: 16px;
+        border-radius: 18px;
+        border: 1px solid #eff2ff;
+        margin-bottom: 16px;
+        background: white;
+    }
+    .mood-emoji {
+        font-size: 28px;
+        margin-right: 14px;
+        line-height: 1;
+    }
+    .behavior-stats span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #374151;
+        margin-right: 12px;
+    }
+    .mini-stat {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 18px;
+    }
+    .mini-stat span {
+        display: block;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+    .insight-box {
+        background: #ffffff;
+        border-radius: 24px;
+        border: 1px solid #ede9fe;
+    }
+    .badge.bg-primary-soft {
+        background: rgba(102, 126, 234, 0.12);
+        color: #4f46e5;
+    }
+    @media (max-width: 768px) {
+        .dashboard-header {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
