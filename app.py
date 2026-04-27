@@ -346,9 +346,7 @@ def server_error(e):
 # ==================== MAIN ====================
 
 if __name__ == '__main__':
-    import sys
-    port = 5001
-    for arg in sys.argv:
-        if arg.startswith('--port='):
-            port = int(arg.split('=')[1])
-    app.run(debug=True, host='0.0.0.0', port=port)
+    import os
+    port = int(os.getenv('PORT', '5001'))
+    debug = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
+    app.run(debug=debug, host='0.0.0.0', port=port)
